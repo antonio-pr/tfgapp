@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button'
 import { makeStyles } from "@material-ui/core/styles";
 import {} from '@material-ui/core/colors/'
 
+
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.success.main
@@ -113,10 +114,21 @@ function App() {
         client.on("connect", () => {
         console.log("Connected");
         client.subscribe("/tfg/react/chart/co2/#");
+        //client.subscribe("/tfg/react/chart/co2/master9580");
         });
 
         client.on("message", (topic, message) => {
-            console.log("on message");
+            console.log("topic on message:", topic)
+            // if(topic == "/tfg/react/chart/co2/master9580") {
+            //     let actual_name = JSON.parse(message.toString())["name"];
+            //     let newName = JSON.parse(message.toString())["newName"];
+            //     console.log("name:", "/tfg/react/chart/co2/" + actual_name);
+            //     console.log("newName", newName);
+
+            //     console.log("json",JSON.stringify({ newName: newName}))
+            //     client.publish("/tfg/react/chart/co2/change/" + actual_name, JSON.stringify({ newName: newName}));
+            // }else{
+            // console.log("ELSE", topic)
             let regex = /(sensor\d+)/g;
             let sensor_aux = topic.match(regex)[0];
             let lvl_aux = JSON.parse(message.toString())["co2"];
@@ -125,13 +137,6 @@ function App() {
             var m = hoy.getMinutes().toString();
             var s = hoy.getSeconds().toString();
             var date_aux = h.concat(":",m,":",s);
-            // console.log("hoy:", hoy);
-
-            // let data_aux = {
-            //     ...chartData
-            // }
-    
-            // console.log("data_aux:", data_aux)
             
             setChartData(build_data(lvl_aux,sensor_aux, date_aux))
 
@@ -141,8 +146,7 @@ function App() {
                 sensor: sensor_aux,
                 date: date_aux
             }));
-
-            
+            // }
         });
     }
 
@@ -179,17 +183,16 @@ function App() {
  
     return (
         <div className="App">
-            {chartData.datasets.map(station => 
-            <Button 
-            //classes = {{ root: classes.root}}
-            variant="contained" 
-            color= "primary"
-            className={station.label}
-            key={station.label} 
-            onClick={() => onButtonClick(station.label)}>
-                    {station.label}: {data.lvl}
-            </Button>)}
-
+            
+                {chartData.datasets.map(station => 
+                <Button 
+                variant="contained" 
+                color= {station.data[station.data.length-1] > 800 ? "secondary": "primary"}
+                className={station.label}
+                key={station.label} 
+                onClick={() => onButtonClick(station.label)}>
+                        {station.label}: {data.lvl}
+                </Button>)}
             <header className="App-header">
                 <LineChart state={chartData} /> 
             </header>
