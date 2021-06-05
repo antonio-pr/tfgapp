@@ -58,7 +58,7 @@ const LineChart = (props) => {
         if(chartContainer && chartContainer.current) {
             const newChartInstance = new Chart(chartContainer.current, chartConfig);
             setChartInstance(newChartInstance);
-            console.log("newChart",newChartInstance.data);
+            // console.log("newChart",newChartInstance.data);
         }
         // updateDataset(0, [1, 2, 3, 4, 5, 6])
     }, [chartContainer]);
@@ -67,9 +67,14 @@ const LineChart = (props) => {
         if(chartInstance != null) {
             console.log("props.state.labels[props.state.pos]", props.state.labels[props.state.pos])
             console.log("props.state.datasets[props.state.pos]",props.state.datasets[props.state.pos])
-            chartInstance.data.labels = props.state.labels[props.state.pos]
-            chartInstance.data.datasets[0].data = props.state.datasets[props.state.pos].data
-            chartInstance.data.datasets[0].label = props.state.datasets[props.state.pos].label
+
+            // chartInstance.data.labels = props.state.labels[props.state.pos].slice(0,props.size)
+            chartInstance.data.labels = props.state.labels[props.state.pos].length <= props.size ? props.state.labels[props.state.pos].slice() : props.state.labels[props.state.pos].slice(props.state.labels[props.state.pos].length - props.size, props.state.labels[props.state.pos].length)
+
+            // chartInstance.data.datasets[0].data = props.state.datasets[props.state.pos].data.slice(0,props.size)
+            chartInstance.data.datasets[0].data = props.state.datasets[props.state.pos].data.length <= props.size ? props.state.datasets[props.state.pos].data.slice() : props.state.datasets[props.state.pos].data.slice(props.state.datasets[props.state.pos].data.length - props.size, props.state.datasets[props.state.pos].data.length)
+
+            chartInstance.data.datasets[0].label = props.state.datasets[props.state.pos].label[1]
             chartInstance.data.datasets[0].backgroundColor = colorConfig[props.state.pos].backgroundColor
             chartInstance.data.datasets[0].borderColor = colorConfig[props.state.pos].borderColor
             chartInstance.options.scales.yAxes.beginAtZero = true

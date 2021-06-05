@@ -13,3 +13,23 @@
   color: white;
 }
 
+.select {
+    margin-top: 2rem;
+}
+
+.ButtonsFormat {
+    margin: 1rem;
+}
+
+.textField {
+    margin-left: 1rem;
+    margin-top: 2rem;
+}
+
+.Buttons {
+    margin-top: 2rem;
+}
+
+.okButton {
+    margin-top: 1rem;
+}
